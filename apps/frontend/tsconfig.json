@@ -1,6 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "module": "NodeNext",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "types": [
       "node"
     ],

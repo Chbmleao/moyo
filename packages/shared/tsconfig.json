@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "module": "NodeNext",
     "declaration": true,
     "declarationMap": true,
     "outDir": "dist"
