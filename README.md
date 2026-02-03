@@ -1,24 +1,18 @@
 # Moyo
 
-Infraestrutura inicial do projeto Moyo — uma plataforma em português brasileiro para profissionais de saúde mental gerenciarem documentos e coletarem assinaturas digitais de pacientes.
+Initial infrastructure for the Moyo project — a platform for mental health professionals to manage documents and collect digital signatures from patients. The user interface is in Brazilian Portuguese.
 
-## Estrutura
+## Structure
 
-- `apps/backend`: servidor Fastify com integrações futuras ao Supabase.
-- `apps/frontend`: aplicação Next.js 14 com Tailwind CSS e tokens de cor da paleta oficial.
-- `packages/shared`: espaço para tipagens e utilitários compartilhados entre backend e frontend.
+- `apps/backend`: Fastify server with planned Supabase integrations.
+- `apps/frontend`: Next.js 14 app with Tailwind CSS and official palette color tokens.
+- `packages/shared`: Shared types and utilities used by both backend and frontend.
 
-## Scripts principais
+## Main scripts
 
 ```bash
-npm run dev        # executa pipelines de desenvolvimento via Turborepo
-npm run build      # constrói todos os workspaces
-npm run lint       # lint em todos os pacotes
-npm run type-check # checagem de tipos
+npm run dev        # run development pipelines via Turborepo
+npm run build      # build all workspaces
+npm run lint       # lint all packages
+npm run type-check # type checking
 ```
-
-## Próximos passos sugeridos
-
-1. Configurar autenticação Supabase e variáveis de ambiente.
-2. Implementar fluxos de upload/assinatura nos respectivos apps.
-3. Adicionar testes e pipelines de CI.
