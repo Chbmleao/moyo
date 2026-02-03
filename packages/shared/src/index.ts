@@ -1,5 +1,7 @@
-export type AssinaturaStatus = 'pendente' | 'assinada' | 'expirada';
+export type SignatureStatus = 'pending' | 'signed' | 'expired';
 
-export const projeto = {
-  nome: 'Moyo',
+export type { AuthUser } from './auth';
+
+export const project = {
+  name: 'Moyo',
 };
