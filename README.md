@@ -4,9 +4,24 @@ Initial infrastructure for the Moyo project — a platform for mental health pro
 
 ## Structure
 
-- `apps/backend`: Fastify server with planned Supabase integrations.
-- `apps/frontend`: Next.js 14 app with Tailwind CSS and official palette color tokens.
-- `packages/shared`: Shared types and utilities used by both backend and frontend.
+- `apps/backend`: Fastify server with Supabase Auth (clean architecture: domain, application, infrastructure, HTTP middleware).
+- `apps/frontend`: Next.js 14 app with Tailwind CSS, Supabase Auth (browser/server/middleware clients), login/signup, and protected `/app` routes.
+- `packages/shared`: Shared types (including `AuthUser`) and utilities used by both backend and frontend.
+
+## Environment
+
+Copy `.env.example` and set Supabase credentials:
+
+- **Backend:** `SUPABASE_URL`, `SUPABASE_ANON_KEY` (required for JWT validation and `GET /auth/me`).
+- **Frontend:** In `apps/frontend/.env.local`, set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
+Get the URL and anon key from the [Supabase Dashboard](https://supabase.com/dashboard) → Project → Settings → API. Enable Email auth in Authentication → Providers if needed.
+
+## Auth flow
+
+1. **Frontend:** Users sign in or sign up at `/login` and `/signup` (Supabase Email auth). Session is stored in cookies and refreshed in Next.js middleware.
+2. **Protected routes:** Paths under `/app` require authentication; unauthenticated users are redirected to `/login`. The `(app)` layout also checks the session server-side.
+3. **Backend API:** Send `Authorization: Bearer <access_token>` (from the Supabase session) when calling protected endpoints. `GET /auth/me` returns the current user when the token is valid.
 
 ## Main scripts
 
