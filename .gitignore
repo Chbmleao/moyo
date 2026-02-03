@@ -8,3 +8,22 @@ dist
 build
 coverage
 *.log
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.idea
+*.iml
+*.swp
+*.swo
+*~
+
+# Caches
+.eslintcache
+.cache
+.parcel-cache

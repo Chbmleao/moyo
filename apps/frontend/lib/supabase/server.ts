@@ -19,7 +19,7 @@ export async function createSupabaseServerClient() {
             try {
               cookieStore.set(name, value, options);
             } catch {
-              // Ignora falha em ambiente serverless
+              // Ignore failure in serverless environment
             }
           });
         },
