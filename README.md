@@ -26,8 +26,12 @@ Get the URL and anon key from the [Supabase Dashboard](https://supabase.com/dash
 ## Main scripts
 
 ```bash
-npm run dev        # run development pipelines via Turborepo
-npm run build      # build all workspaces
-npm run lint       # lint all packages
-npm run type-check # type checking
+npm run dev           # run backend and frontend (Turborepo)
+npm run dev:backend   # run backend only
+npm run dev:frontend  # run frontend only
+npm run build        # build all workspaces
+npm run lint         # lint all packages
+npm run type-check   # type checking
 ```
+
+To use Turbo filter directly: `npx turbo run dev --filter=@moyo/backend` or `--filter=@moyo/frontend`.

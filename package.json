@@ -9,6 +9,8 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "dev:backend": "turbo run dev --filter=@moyo/backend",
+    "dev:frontend": "turbo run dev --filter=@moyo/frontend",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
