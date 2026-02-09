@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Header } from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'Moyo',
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pt-BR">
       <body className="min-h-screen bg-background text-foreground">
+        <Header />
         {children}
       </body>
     </html>

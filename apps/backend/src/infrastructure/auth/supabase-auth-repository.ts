@@ -20,9 +20,11 @@ export function createSupabaseAuthRepository(): AuthRepository {
         return null;
       }
 
+      const role = (user.user_metadata?.role as 'professional' | 'patient' | undefined) ?? 'patient';
       return {
         id: user.id,
         email: user.email ?? '',
+        role: role === 'professional' ? 'professional' : 'patient',
       };
     },
   };

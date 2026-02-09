@@ -6,6 +6,12 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
       await reply.status(401).send({ error: 'Unauthorized' });
       return;
     }
-    await reply.send({ user: { id: request.user.id, email: request.user.email } });
+    await reply.send({
+        user: {
+          id: request.user.id,
+          email: request.user.email,
+          role: request.user.role,
+        },
+      });
   });
 }

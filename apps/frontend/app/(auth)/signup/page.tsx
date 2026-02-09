@@ -5,9 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
+type UserRole = 'professional' | 'patient';
+
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<UserRole>('professional');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -23,6 +26,9 @@ export default function SignupPage() {
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: { role },
+      },
     });
 
     setLoading(false);
@@ -48,6 +54,39 @@ export default function SignupPage() {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <fieldset>
+            <legend className="mb-2 block text-sm font-medium text-foreground">
+              Tipo de conta
+            </legend>
+            <div className="flex gap-4">
+              <label className="flex min-h-[48px] min-w-[44px] flex-1 cursor-pointer items-center gap-2 rounded-lg border-2 border-input bg-background px-4 py-3 has-[:checked]:border-primary has-[:checked]:bg-primary/10">
+                <input
+                  type="radio"
+                  name="role"
+                  value="professional"
+                  checked={role === 'professional'}
+                  onChange={() => setRole('professional')}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-medium">Profissional</span>
+              </label>
+              <label className="flex min-h-[48px] min-w-[44px] flex-1 cursor-pointer items-center gap-2 rounded-lg border-2 border-input bg-background px-4 py-3 has-[:checked]:border-primary has-[:checked]:bg-primary/10">
+                <input
+                  type="radio"
+                  name="role"
+                  value="patient"
+                  checked={role === 'patient'}
+                  onChange={() => setRole('patient')}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-medium">Paciente</span>
+              </label>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Profissionais gerenciam documentos e enviam para assinatura. Pacientes apenas
+              assinam documentos enviados a eles.
+            </p>
+          </fieldset>
           <div>
             <label
               htmlFor="email"

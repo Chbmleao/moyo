@@ -18,7 +18,7 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -30,7 +30,8 @@ export default function LoginPage() {
       return;
     }
 
-    router.push('/app');
+    const role = data.user?.user_metadata?.role ?? 'patient';
+    router.push(role === 'professional' ? '/app' : '/app/assinaturas');
     router.refresh();
   }
 
