@@ -1,4 +1,12 @@
-const getBaseUrl = () => process.env.NEXT_PUBLIC_BACKEND_URL ?? '';
+function getBaseUrl(): string {
+  const url = process.env.NEXT_PUBLIC_BACKEND_URL ?? '';
+  if (!url && typeof window !== 'undefined') {
+    throw new Error(
+      'NEXT_PUBLIC_BACKEND_URL is not set. Add it to .env (e.g. http://localhost:3333) and ensure the backend is running.'
+    );
+  }
+  return url;
+}
 
 export type DocumentItem = {
   id: string;

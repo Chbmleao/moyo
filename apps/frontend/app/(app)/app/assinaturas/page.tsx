@@ -35,7 +35,14 @@ export default function AssinaturasPage() {
         const list = await listDocuments(session.access_token);
         if (!cancelled) setDocuments(list);
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : 'Erro ao carregar');
+        if (!cancelled) {
+          const message = e instanceof Error ? e.message : 'Erro ao carregar';
+          setError(
+            message === 'Failed to fetch'
+              ? 'Não foi possível conectar ao servidor. Verifique se o backend está em execução e NEXT_PUBLIC_BACKEND_URL no .env.'
+              : message
+          );
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
