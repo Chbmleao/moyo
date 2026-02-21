@@ -27,3 +27,7 @@ Thumbs.db
 .eslintcache
 .cache
 .parcel-cache
+
+# Supabase local
+**/supabase/.branches
+**/supabase/.temp
