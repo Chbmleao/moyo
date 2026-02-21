@@ -73,17 +73,18 @@ export function makeSignDocument(
 			height: sigHeight,
 		});
 
-		// Save and re-upload the signed PDF
+		// Save the signed PDF to a separate path (preserve original)
 		const signedPdfBytes = await pdfDoc.save();
+		const signedFilePath = document.filePath.replace(/\.pdf$/i, "_signed.pdf");
 		await storageRepository.uploadFile(
 			DOCUMENTS_BUCKET,
-			document.filePath,
+			signedFilePath,
 			Buffer.from(signedPdfBytes),
 			"application/pdf",
 		);
 
-		// Update document status
-		const updated = await documentRepository.signDocument(token);
+		// Update document status and store signed file path
+		const updated = await documentRepository.signDocument(token, signedFilePath);
 
 		if (!updated) {
 			throw Object.assign(new Error("Failed to sign document"), { statusCode: 500 });

@@ -9,6 +9,7 @@ const SIGNED_URL_EXPIRES_SECONDS = 3600;
 export type GetDocumentResult = {
   document: Document;
   viewUrl: string;
+  signedViewUrl: string | null;
 };
 
 export type GetDocument = (
@@ -37,6 +38,15 @@ export function makeGetDocument(
       SIGNED_URL_EXPIRES_SECONDS
     );
 
-    return { document, viewUrl };
+    let signedViewUrl: string | null = null;
+    if (document.signedFilePath) {
+      signedViewUrl = await storageRepository.createSignedUrl(
+        DOCUMENTS_BUCKET,
+        document.signedFilePath,
+        SIGNED_URL_EXPIRES_SECONDS
+      );
+    }
+
+    return { document, viewUrl, signedViewUrl };
   };
 }

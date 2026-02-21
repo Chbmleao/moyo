@@ -10,5 +10,6 @@ export type Document = {
 	status: DocumentStatus;
 	signingToken: string | null;
 	signedAt: Date | null;
+	signedFilePath: string | null;
 	createdAt: Date;
 };

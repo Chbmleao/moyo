@@ -17,5 +17,5 @@ export type DocumentRepository = {
 	getById(id: string): Promise<Document | null>;
 	generateSigningToken(documentId: string, professionalId: string): Promise<string>;
 	getBySigningToken(token: string): Promise<Document | null>;
-	signDocument(token: string): Promise<Document | null>;
+	signDocument(token: string, signedFilePath: string): Promise<Document | null>;
 };

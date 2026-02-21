@@ -12,6 +12,7 @@ type DocumentRow = {
 	status: "pending_signature" | "signed";
 	signing_token: string | null;
 	signed_at: string | null;
+	signed_file_path: string | null;
 	created_at: string;
 };
 
@@ -26,6 +27,7 @@ function rowToDocument(row: DocumentRow): Document {
 		status: row.status,
 		signingToken: row.signing_token,
 		signedAt: row.signed_at ? new Date(row.signed_at) : null,
+		signedFilePath: row.signed_file_path,
 		createdAt: new Date(row.created_at),
 	};
 }
@@ -116,12 +118,13 @@ export function createSupabaseDocumentRepository(): DocumentRepository {
 			return data ? rowToDocument(data as DocumentRow) : null;
 		},
 
-		async signDocument(token: string): Promise<Document | null> {
+		async signDocument(token: string, signedFilePath: string): Promise<Document | null> {
 			const { data, error } = await supabase
 				.from("documents")
 				.update({
 					status: "signed",
 					signed_at: new Date().toISOString(),
+					signed_file_path: signedFilePath,
 				})
 				.eq("signing_token", token)
 				.eq("status", "pending_signature")
