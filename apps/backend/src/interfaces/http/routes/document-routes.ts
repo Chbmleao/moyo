@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { CreateDocument } from "../../../application/use-cases/create-document.js";
 import type { ListDocuments } from "../../../application/use-cases/list-documents.js";
 import type { GetDocument } from "../../../application/use-cases/get-document.js";
+import type { CreateSigningLink } from "../../../application/use-cases/create-signing-link.js";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const PDF_MIME = "application/pdf";
@@ -25,6 +26,7 @@ export function registerDocumentRoutes(
 		createDocument: CreateDocument;
 		listDocuments: ListDocuments;
 		getDocument: GetDocument;
+		createSigningLink: CreateSigningLink;
 	},
 ): void {
 	app.post("/documents", async (request, reply) => {
@@ -163,6 +165,35 @@ export function registerDocumentRoutes(
 		} catch (err) {
 			request.log.error(err);
 			await reply.status(500).send({ error: "Internal Server Error" });
+		}
+	});
+
+	// POST /documents/:id/signing-link — generate a public signing link
+	app.post<{ Params: { id: string } }>("/documents/:id/signing-link", async (request, reply) => {
+		if (!request.user) {
+			await reply.status(401).send({ error: "Unauthorized" });
+			return;
+		}
+		if (request.user.role !== "professional") {
+			await reply.status(403).send({ error: "Forbidden", message: "Only professionals can create signing links" });
+			return;
+		}
+
+		const { id } = request.params;
+		const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+		if (!uuidRegex.test(id)) {
+			await reply.status(400).send({ error: "Bad Request", message: "Invalid document ID format" });
+			return;
+		}
+
+		try {
+			const result = await deps.createSigningLink(id, request.user.id);
+			await reply.send(result);
+		} catch (err: unknown) {
+			const statusCode = (err as { statusCode?: number }).statusCode ?? 500;
+			const message = err instanceof Error ? err.message : "Internal Server Error";
+			request.log.error(err);
+			await reply.status(statusCode).send({ error: message });
 		}
 	});
 }

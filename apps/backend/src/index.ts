@@ -9,9 +9,13 @@ import { makeGetCurrentUser } from "./application/use-cases/get-current-user.js"
 import { makeCreateDocument } from "./application/use-cases/create-document.js";
 import { makeListDocuments } from "./application/use-cases/list-documents.js";
 import { makeGetDocument } from "./application/use-cases/get-document.js";
+import { makeCreateSigningLink } from "./application/use-cases/create-signing-link.js";
+import { makeGetDocumentByToken } from "./application/use-cases/get-document-by-token.js";
+import { makeSignDocument } from "./application/use-cases/sign-document.js";
 import { createAuthPreHandler } from "./interfaces/http/middleware/auth.js";
 import { registerAuthRoutes } from "./interfaces/http/routes/auth-routes.js";
 import { registerDocumentRoutes } from "./interfaces/http/routes/document-routes.js";
+import { registerSigningRoutes } from "./interfaces/http/routes/signing-routes.js";
 
 config();
 
@@ -23,6 +27,9 @@ const getCurrentUser = makeGetCurrentUser(authRepository);
 const createDocument = makeCreateDocument(documentRepository, storageRepository);
 const listDocuments = makeListDocuments(documentRepository);
 const getDocument = makeGetDocument(documentRepository, storageRepository);
+const createSigningLink = makeCreateSigningLink(documentRepository);
+const getDocumentByToken = makeGetDocumentByToken(documentRepository, storageRepository);
+const signDocument = makeSignDocument(documentRepository);
 
 const authPreHandler = createAuthPreHandler(getCurrentUser);
 
@@ -43,6 +50,9 @@ app.register(multipart, {
 
 app.get("/health", async () => ({ status: "ok" }));
 
+// Public signing routes (no auth required)
+registerSigningRoutes(app, { getDocumentByToken, signDocument });
+
 app.register(async protectedScope => {
 	protectedScope.addHook("preHandler", authPreHandler);
 	await protectedScope.register(registerAuthRoutes);
@@ -50,6 +60,7 @@ app.register(async protectedScope => {
 		createDocument,
 		listDocuments,
 		getDocument,
+		createSigningLink,
 	});
 });
 

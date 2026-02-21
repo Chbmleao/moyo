@@ -13,6 +13,8 @@ type DocumentRow = {
   signer_email: string | null;
   deadline_at: string | null;
   status: 'pending_signature' | 'signed';
+  signing_token: string | null;
+  signed_at: string | null;
   created_at: string;
 };
 
@@ -25,6 +27,8 @@ function rowToDocument(row: DocumentRow): Document {
     signerEmail: row.signer_email,
     deadlineAt: row.deadline_at ? new Date(row.deadline_at) : null,
     status: row.status,
+    signingToken: row.signing_token,
+    signedAt: row.signed_at ? new Date(row.signed_at) : null,
     createdAt: new Date(row.created_at),
   };
 }
@@ -86,6 +90,53 @@ export function createSupabaseDocumentRepository(): DocumentRepository {
         .from('documents')
         .select('*')
         .eq('id', id)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') return null;
+        throw error;
+      }
+      return data ? rowToDocument(data as DocumentRow) : null;
+    },
+
+    async generateSigningToken(documentId: string, professionalId: string): Promise<string> {
+      const { randomUUID } = await import('node:crypto');
+      const token = randomUUID();
+
+      const { error } = await supabase
+        .from('documents')
+        .update({ signing_token: token })
+        .eq('id', documentId)
+        .eq('professional_id', professionalId);
+
+      if (error) throw error;
+      return token;
+    },
+
+    async getBySigningToken(token: string): Promise<Document | null> {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('*')
+        .eq('signing_token', token)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') return null;
+        throw error;
+      }
+      return data ? rowToDocument(data as DocumentRow) : null;
+    },
+
+    async signDocument(token: string): Promise<Document | null> {
+      const { data, error } = await supabase
+        .from('documents')
+        .update({
+          status: 'signed',
+          signed_at: new Date().toISOString(),
+        })
+        .eq('signing_token', token)
+        .eq('status', 'pending_signature')
+        .select()
         .single();
 
       if (error) {

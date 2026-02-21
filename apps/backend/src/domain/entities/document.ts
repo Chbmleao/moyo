@@ -8,5 +8,7 @@ export type Document = {
   signerEmail: string | null;
   deadlineAt: Date | null;
   status: DocumentStatus;
+  signingToken: string | null;
+  signedAt: Date | null;
   createdAt: Date;
 };
