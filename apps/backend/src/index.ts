@@ -29,7 +29,7 @@ const listDocuments = makeListDocuments(documentRepository);
 const getDocument = makeGetDocument(documentRepository, storageRepository);
 const createSigningLink = makeCreateSigningLink(documentRepository);
 const getDocumentByToken = makeGetDocumentByToken(documentRepository, storageRepository);
-const signDocument = makeSignDocument(documentRepository);
+const signDocument = makeSignDocument(documentRepository, storageRepository);
 
 const authPreHandler = createAuthPreHandler(getCurrentUser);
 

@@ -17,7 +17,8 @@
 		"@moyo/shared": "*",
 		"@supabase/supabase-js": "^2.42.0",
 		"dotenv": "^16.4.5",
-		"fastify": "^5.6.2"
+		"fastify": "^5.6.2",
+		"pdf-lib": "^1.17.1"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.30",
