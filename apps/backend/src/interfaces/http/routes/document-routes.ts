@@ -161,6 +161,7 @@ export function registerDocumentRoutes(
 					createdAt: result.document.createdAt.toISOString(),
 				},
 				viewUrl: result.viewUrl,
+				signedViewUrl: result.signedViewUrl ?? null,
 			});
 		} catch (err) {
 			request.log.error(err);
