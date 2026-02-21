@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { listDocuments, uploadDocument, getDocument, type DocumentItem } from "@/lib/api/documents";
+import { listDocuments, uploadDocument, getDocument, createSigningLink, type DocumentItem } from "@/lib/api/documents";
 
 export default function DocumentosPage() {
 	const router = useRouter();
@@ -16,6 +16,8 @@ export default function DocumentosPage() {
 	const [file, setFile] = useState<File | null>(null);
 	const [signerEmail, setSignerEmail] = useState("");
 	const [deadline, setDeadline] = useState("");
+	const [signingLinkUrl, setSigningLinkUrl] = useState<string | null>(null);
+	const [signingLinkCopied, setSigningLinkCopied] = useState(false);
 	const supabase = createSupabaseBrowserClient();
 
 	useEffect(() => {
@@ -101,6 +103,29 @@ export default function DocumentosPage() {
 		} catch {
 			setError("Não foi possível abrir o documento.");
 		}
+	}
+
+	async function handleGenerateLink(id: string) {
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
+		if (!session?.access_token) return;
+		try {
+			const result = await createSigningLink(id, session.access_token);
+			setSigningLinkUrl(result.signingUrl);
+			setSigningLinkCopied(false);
+		} catch (e) {
+			const message = e instanceof Error ? e.message : "Erro ao gerar link";
+			setError(message);
+		}
+	}
+
+	function handleCopyLink() {
+		if (!signingLinkUrl) return;
+		navigator.clipboard.writeText(signingLinkUrl).then(() => {
+			setSigningLinkCopied(true);
+			setTimeout(() => setSigningLinkCopied(false), 2000);
+		});
 	}
 
 	return (
@@ -196,20 +221,62 @@ export default function DocumentosPage() {
 										<p className="text-sm text-muted-foreground">
 											{doc.signerEmail ? `Signatário: ${doc.signerEmail}` : "Sem signatário definido"}
 											{doc.deadlineAt && ` · Prazo: ${new Date(doc.deadlineAt).toLocaleDateString("pt-BR")}`}
-											{` · ${doc.status === "signed" ? "Assinado" : "Pendente"}`}
+											{` · ${doc.status === "signed" ? "Assinado ✓" : "Pendente"}`}
 										</p>
 									</div>
-									<button
-										type="button"
-										onClick={() => handleView(doc.id)}
-										className="min-h-[44px] min-w-[44px] rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-ring">
-										Ver
-									</button>
+									<div className="flex items-center gap-2">
+										{doc.status === "pending_signature" && (
+											<button
+												type="button"
+												onClick={() => handleGenerateLink(doc.id)}
+												className="min-h-[44px] min-w-[44px] rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-ring">
+												Gerar link de assinatura
+											</button>
+										)}
+										<button
+											type="button"
+											onClick={() => handleView(doc.id)}
+											className="min-h-[44px] min-w-[44px] rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-ring">
+											Ver
+										</button>
+									</div>
 								</li>
 							))}
 						</ul>
 					)}
 				</section>
+
+				{/* Signing Link Modal */}
+				{signingLinkUrl && (
+					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+						<div className="mx-4 w-full max-w-lg rounded-xl border border-border bg-card p-6 shadow-lg">
+							<h3 className="mb-2 text-lg font-semibold text-foreground">Link de assinatura gerado</h3>
+							<p className="mb-4 text-sm text-muted-foreground">
+								Envie este link para o paciente assinar o documento. Não é necessário login.
+							</p>
+							<div className="mb-4 flex items-center gap-2 rounded-lg border border-input bg-background px-3 py-2">
+								<input
+									type="text"
+									readOnly
+									value={signingLinkUrl}
+									className="flex-1 bg-transparent text-sm text-foreground outline-none"
+								/>
+								<button
+									type="button"
+									onClick={handleCopyLink}
+									className="shrink-0 rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition hover:bg-primary/90">
+									{signingLinkCopied ? "Copiado!" : "Copiar"}
+								</button>
+							</div>
+							<button
+								type="button"
+								onClick={() => setSigningLinkUrl(null)}
+								className="w-full rounded-full border border-border py-2 text-sm font-medium text-foreground transition hover:border-primary hover:text-primary">
+								Fechar
+							</button>
+						</div>
+					</div>
+				)}
 			</div>
 		</main>
 	);

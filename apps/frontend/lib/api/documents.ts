@@ -75,3 +75,59 @@ export async function uploadDocument(
   }
   return res.json();
 }
+
+// ── Signing link (protected — professional) ──────────────────────────
+
+export type SigningLinkResult = {
+  signingToken: string;
+  signingUrl: string;
+};
+
+export async function createSigningLink(
+  documentId: string,
+  token: string
+): Promise<SigningLinkResult> {
+  const res = await fetchWithAuth(`/documents/${documentId}/signing-link`, token, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+// ── Public signing endpoints (no auth) ───────────────────────────────
+
+export type SigningDocument = {
+  document: {
+    id: string;
+    fileName: string;
+    signerEmail: string | null;
+    deadlineAt: string | null;
+    status: string;
+    signedAt: string | null;
+  };
+  viewUrl: string;
+};
+
+export async function getDocumentByToken(
+  signingToken: string
+): Promise<SigningDocument> {
+  const url = `${getBaseUrl()}/signing/${signingToken}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(body.error || res.statusText);
+  }
+  return res.json();
+}
+
+export async function signDocumentByToken(
+  signingToken: string
+): Promise<{ message: string; signedAt: string }> {
+  const url = `${getBaseUrl()}/signing/${signingToken}/sign`;
+  const res = await fetch(url, { method: 'POST' });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(body.error || res.statusText);
+  }
+  return res.json();
+}
