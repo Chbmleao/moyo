@@ -105,6 +105,21 @@ export default function DocumentosPage() {
 		}
 	}
 
+	async function handleViewSigned(id: string) {
+		const {
+			data: { session },
+		} = await supabase.auth.getSession();
+		if (!session?.access_token) return;
+		try {
+			const { signedViewUrl } = await getDocument(id, session.access_token);
+			if (signedViewUrl) {
+				window.open(signedViewUrl, "_blank");
+			}
+		} catch {
+			setError("Não foi possível abrir o documento assinado.");
+		}
+	}
+
 	async function handleGenerateLink(id: string) {
 		const {
 			data: { session },
@@ -237,8 +252,16 @@ export default function DocumentosPage() {
 											type="button"
 											onClick={() => handleView(doc.id)}
 											className="min-h-[44px] min-w-[44px] rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-ring">
-											Ver
+										Ver original
+									</button>
+									{doc.status === "signed" && (
+										<button
+											type="button"
+											onClick={() => handleViewSigned(doc.id)}
+											className="min-h-[44px] min-w-[44px] rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring">
+											Ver assinado
 										</button>
+									)}
 									</div>
 								</li>
 							))}

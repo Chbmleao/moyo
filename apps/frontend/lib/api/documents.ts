@@ -20,6 +20,7 @@ export type DocumentItem = {
 export type DocumentWithViewUrl = {
 	document: DocumentItem;
 	viewUrl: string;
+	signedViewUrl: string | null;
 };
 
 async function fetchWithAuth(path: string, token: string, options?: RequestInit): Promise<Response> {
