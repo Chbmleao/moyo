@@ -5,6 +5,7 @@ import { config } from "dotenv";
 import { createSupabaseAuthRepository } from "./infrastructure/auth/supabase-auth-repository.js";
 import { createSupabaseDocumentRepository } from "./infrastructure/database/supabase-document-repository.js";
 import { createSupabaseStorageRepository } from "./infrastructure/storage/supabase-storage-repository.js";
+import { createSupabasePatientRepository } from "./infrastructure/database/supabase-patient-repository.js";
 import { makeGetCurrentUser } from "./application/use-cases/get-current-user.js";
 import { makeCreateDocument } from "./application/use-cases/create-document.js";
 import { makeListDocuments } from "./application/use-cases/list-documents.js";
@@ -12,9 +13,14 @@ import { makeGetDocument } from "./application/use-cases/get-document.js";
 import { makeCreateSigningLink } from "./application/use-cases/create-signing-link.js";
 import { makeGetDocumentByToken } from "./application/use-cases/get-document-by-token.js";
 import { makeSignDocument } from "./application/use-cases/sign-document.js";
+import { makeCreatePatient } from "./application/use-cases/create-patient.js";
+import { makeListPatients } from "./application/use-cases/list-patients.js";
+import { makeUpdatePatient } from "./application/use-cases/update-patient.js";
+import { makeDeletePatient } from "./application/use-cases/delete-patient.js";
 import { createAuthPreHandler } from "./interfaces/http/middleware/auth.js";
 import { registerAuthRoutes } from "./interfaces/http/routes/auth-routes.js";
 import { registerDocumentRoutes } from "./interfaces/http/routes/document-routes.js";
+import { registerPatientRoutes } from "./interfaces/http/routes/patient-routes.js";
 import { registerSigningRoutes } from "./interfaces/http/routes/signing-routes.js";
 
 config();
@@ -22,6 +28,7 @@ config();
 const authRepository = createSupabaseAuthRepository();
 const documentRepository = createSupabaseDocumentRepository();
 const storageRepository = createSupabaseStorageRepository();
+const patientRepository = createSupabasePatientRepository();
 
 const getCurrentUser = makeGetCurrentUser(authRepository);
 const createDocument = makeCreateDocument(documentRepository, storageRepository);
@@ -30,6 +37,10 @@ const getDocument = makeGetDocument(documentRepository, storageRepository);
 const createSigningLink = makeCreateSigningLink(documentRepository);
 const getDocumentByToken = makeGetDocumentByToken(documentRepository, storageRepository);
 const signDocument = makeSignDocument(documentRepository, storageRepository);
+const createPatient = makeCreatePatient(patientRepository);
+const listPatients = makeListPatients(patientRepository);
+const updatePatient = makeUpdatePatient(patientRepository);
+const deletePatient = makeDeletePatient(patientRepository);
 
 const authPreHandler = createAuthPreHandler(getCurrentUser);
 
@@ -61,6 +72,12 @@ app.register(async protectedScope => {
 		listDocuments,
 		getDocument,
 		createSigningLink,
+	});
+	registerPatientRoutes(protectedScope, {
+		createPatient,
+		listPatients,
+		updatePatient,
+		deletePatient,
 	});
 });
 
