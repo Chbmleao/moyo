@@ -8,6 +8,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 type UserRole = "professional" | "patient";
 
 export default function SignupPage() {
+	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [role, setRole] = useState<UserRole>("professional");
@@ -27,7 +28,7 @@ export default function SignupPage() {
 			email,
 			password,
 			options: {
-				data: { role },
+				data: { role, name: name.trim() || undefined },
 			},
 		});
 
@@ -54,6 +55,21 @@ export default function SignupPage() {
 				<p className="text-sm text-muted-foreground">Cadastre-se para usar a plataforma.</p>
 
 				<form onSubmit={handleSubmit} className="space-y-4">
+					<div>
+						<label htmlFor="name" className="mb-1 block text-sm font-medium text-foreground">
+							Nome completo
+						</label>
+						<input
+							id="name"
+							type="text"
+							value={name}
+							onChange={e => setName(e.target.value)}
+							required
+							autoComplete="name"
+							placeholder="Ex: Maria Silva"
+							className="w-full rounded-lg border border-input bg-background px-3 py-2 text-foreground ring-ring focus:outline-none focus:ring-2"
+						/>
+					</div>
 					<fieldset>
 						<legend className="mb-2 block text-sm font-medium text-foreground">Tipo de conta</legend>
 						<div className="flex gap-4">

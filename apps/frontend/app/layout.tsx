@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/header';
+import { ToastProvider } from '@/components/toast';
 
 export const metadata: Metadata = {
   title: 'Moyo',
@@ -16,8 +17,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pt-BR">
       <body className="min-h-screen bg-background text-foreground">
-        <Header />
-        {children}
+        <ToastProvider>
+          <Header />
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );

@@ -8,6 +8,7 @@ import {
   getDocument,
   type DocumentItem,
 } from '@/lib/api/documents';
+import { useToast } from '@/components/toast';
 
 export default function AssinaturasPage() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function AssinaturasPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const supabase = createSupabaseBrowserClient();
+  const toast = useToast();
 
   useEffect(() => {
     let cancelled = false;
@@ -62,7 +64,7 @@ export default function AssinaturasPage() {
       const { viewUrl } = await getDocument(id, session.access_token);
       window.open(viewUrl, '_blank');
     } catch {
-      setError('Não foi possível abrir o documento.');
+      toast.error('Não foi possível abrir o documento.');
     }
   }
 

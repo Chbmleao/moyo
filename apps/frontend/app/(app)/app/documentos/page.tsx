@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { listDocuments, uploadDocument, getDocument, createSigningLink, type DocumentItem } from "@/lib/api/documents";
+import { useToast } from "@/components/toast";
 
 export default function DocumentosPage() {
 	const router = useRouter();
@@ -12,13 +12,13 @@ export default function DocumentosPage() {
 	const [loading, setLoading] = useState(true);
 	const [uploading, setUploading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [uploadError, setUploadError] = useState<string | null>(null);
 	const [file, setFile] = useState<File | null>(null);
 	const [signerEmail, setSignerEmail] = useState("");
 	const [deadline, setDeadline] = useState("");
 	const [signingLinkUrl, setSigningLinkUrl] = useState<string | null>(null);
 	const [signingLinkCopied, setSigningLinkCopied] = useState(false);
 	const supabase = createSupabaseBrowserClient();
+	const toast = useToast();
 
 	useEffect(() => {
 		let cancelled = false;
@@ -41,11 +41,11 @@ export default function DocumentosPage() {
 			} catch (e) {
 				const message = e instanceof Error ? e.message : "Erro ao carregar";
 				if (!cancelled) {
-					setError(
-						message === "Failed to fetch"
-							? "Não foi possível conectar ao servidor. Verifique se o backend está em execução (npm run dev:backend) e se NEXT_PUBLIC_BACKEND_URL no .env está correto (ex.: http://localhost:3333)."
-							: message,
-					);
+					const errorMsg = message === "Failed to fetch"
+						? "Não foi possível conectar ao servidor."
+						: message;
+					setError(errorMsg);
+					toast.error(errorMsg);
 				}
 			} finally {
 				if (!cancelled) setLoading(false);
@@ -60,13 +60,12 @@ export default function DocumentosPage() {
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		if (!file) return;
-		setUploadError(null);
 		setUploading(true);
 		const {
 			data: { session },
 		} = await supabase.auth.getSession();
 		if (!session?.access_token) {
-			setUploadError("Sessão expirada. Faça login novamente.");
+			toast.error("Sessão expirada. Faça login novamente.");
 			setUploading(false);
 			return;
 		}
@@ -77,16 +76,16 @@ export default function DocumentosPage() {
 			setFile(null);
 			setSignerEmail("");
 			setDeadline("");
+			toast.success("Documento enviado com sucesso!");
 			if (document.getElementById("file-input")) {
 				(document.getElementById("file-input") as HTMLInputElement).value = "";
 			}
 		} catch (e) {
 			const message = e instanceof Error ? e.message : "Erro ao enviar";
-			setUploadError(
-				message === "Failed to fetch"
-					? "Não foi possível conectar ao servidor. Verifique se o backend está em execução e NEXT_PUBLIC_BACKEND_URL no .env."
-					: message,
-			);
+			const errorMsg = message === "Failed to fetch"
+				? "Não foi possível conectar ao servidor."
+				: message;
+			toast.error(errorMsg);
 		} finally {
 			setUploading(false);
 		}
@@ -101,7 +100,7 @@ export default function DocumentosPage() {
 			const { viewUrl } = await getDocument(id, session.access_token);
 			window.open(viewUrl, "_blank");
 		} catch {
-			setError("Não foi possível abrir o documento.");
+			toast.error("Não foi possível abrir o documento.");
 		}
 	}
 
@@ -116,7 +115,7 @@ export default function DocumentosPage() {
 				window.open(signedViewUrl, "_blank");
 			}
 		} catch {
-			setError("Não foi possível abrir o documento assinado.");
+			toast.error("Não foi possível abrir o documento assinado.");
 		}
 	}
 
@@ -131,7 +130,7 @@ export default function DocumentosPage() {
 			setSigningLinkCopied(false);
 		} catch (e) {
 			const message = e instanceof Error ? e.message : "Erro ao gerar link";
-			setError(message);
+			toast.error(message);
 		}
 	}
 
@@ -146,11 +145,8 @@ export default function DocumentosPage() {
 	return (
 		<main className="min-h-[calc(100vh-4rem)] px-6 py-16 lg:px-12">
 			<div className="mx-auto max-w-4xl">
-				<div className="mb-8 flex items-center justify-between">
+				<div className="mb-8">
 					<h1 className="text-2xl font-semibold text-foreground">Documentos</h1>
-					<Link href="/app" className="text-sm font-medium text-primary hover:underline">
-						Voltar ao início
-					</Link>
 				</div>
 
 				<section className="mb-10 rounded-xl border border-border bg-card p-6">
@@ -203,11 +199,6 @@ export default function DocumentosPage() {
 								className="w-full rounded-lg border border-input bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
 							/>
 						</div>
-						{uploadError && (
-							<p className="text-sm text-destructive" role="alert">
-								{uploadError}
-							</p>
-						)}
 						<button
 							type="submit"
 							disabled={uploading || !file}
@@ -252,16 +243,16 @@ export default function DocumentosPage() {
 											type="button"
 											onClick={() => handleView(doc.id)}
 											className="min-h-[44px] min-w-[44px] rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-ring">
-										Ver original
-									</button>
-									{doc.status === "signed" && (
-										<button
-											type="button"
-											onClick={() => handleViewSigned(doc.id)}
-											className="min-h-[44px] min-w-[44px] rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring">
-											Ver assinado
+											Ver original
 										</button>
-									)}
+										{doc.status === "signed" && (
+											<button
+												type="button"
+												onClick={() => handleViewSigned(doc.id)}
+												className="min-h-[44px] min-w-[44px] rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring">
+												Ver assinado
+											</button>
+										)}
 									</div>
 								</li>
 							))}

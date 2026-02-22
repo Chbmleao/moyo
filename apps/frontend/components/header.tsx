@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { UserMenu } from "@/components/user-menu";
 
 export async function Header() {
 	const supabase = await createSupabaseServerClient();
 	const {
 		data: { user },
 	} = await supabase.auth.getUser();
+
+	const email = user?.email ?? "";
+	const role = (user?.user_metadata?.role as string) ?? "patient";
+	const avatarUrl = (user?.user_metadata?.avatar_url as string) ?? null;
+	const name = (user?.user_metadata?.name as string) ?? null;
 
 	return (
 		<header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -17,13 +23,7 @@ export async function Header() {
 				</Link>
 				<nav className="flex items-center gap-4" aria-label="Navegação principal">
 					{user ? (
-						<>
-							<Link
-								href="/app"
-								className="text-base font-medium text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md px-3 py-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center">
-								Painel
-							</Link>
-						</>
+						<UserMenu email={email} role={role} avatarUrl={avatarUrl} name={name} />
 					) : (
 						<>
 							<Link

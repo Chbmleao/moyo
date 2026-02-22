@@ -8,16 +8,14 @@ import { getDocumentByToken, signDocumentByToken, type SigningDocument } from "@
 // All react-pdf imports must be SSR-safe. We use dynamic() for the components
 // and configure the worker inside the dynamic callback.
 const PDFDocument = dynamic(
-	() => import("react-pdf").then((mod) => {
-		mod.pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${mod.pdfjs.version}/build/pdf.worker.min.js`;
-		return mod.Document;
-	}),
+	() =>
+		import("react-pdf").then(mod => {
+			mod.pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${mod.pdfjs.version}/build/pdf.worker.min.js`;
+			return mod.Document;
+		}),
 	{ ssr: false },
 );
-const PDFPage = dynamic(
-	() => import("react-pdf").then((mod) => mod.Page),
-	{ ssr: false },
-);
+const PDFPage = dynamic(() => import("react-pdf").then(mod => mod.Page), { ssr: false });
 
 // react-signature-canvas needs a ref, so we use lazy import via useEffect
 import type ReactSignatureCanvas from "react-signature-canvas";
@@ -64,13 +62,15 @@ export default function AssinarPage() {
 	const [signedAt, setSignedAt] = useState<string | null>(null);
 
 	const sigCanvasRef = useRef<ReactSignatureCanvas | null>(null);
-	const sigCanvasComponentRef = useRef<React.ComponentType<ReactSignatureCanvas["props"] & { ref?: React.Ref<ReactSignatureCanvas> }> | null>(null);
+	const sigCanvasComponentRef = useRef<React.ComponentType<
+		ReactSignatureCanvas["props"] & { ref?: React.Ref<ReactSignatureCanvas> }
+	> | null>(null);
 	const [sigCanvasReady, setSigCanvasReady] = useState(false);
 	const containerRef = useRef<HTMLDivElement | null>(null);
 
 	// Lazily load react-signature-canvas + react-pdf CSS on the client
 	useEffect(() => {
-		import("react-signature-canvas").then((mod) => {
+		import("react-signature-canvas").then(mod => {
 			sigCanvasComponentRef.current = mod.default as unknown as typeof sigCanvasComponentRef.current;
 			setSigCanvasReady(true);
 		});
@@ -314,20 +314,22 @@ export default function AssinarPage() {
 							Use o mouse ou o dedo para desenhar sua assinatura abaixo.
 						</p>
 						<div className="rounded-lg border border-input bg-white">
-							{sigCanvasReady && sigCanvasComponentRef.current && (() => {
-								const SigCanvas = sigCanvasComponentRef.current!;
-								return (
-									<SigCanvas
-										ref={sigCanvasRef}
-										penColor="black"
-										canvasProps={{
-											width: 460,
-											height: 160,
-											className: "w-full rounded-lg",
-										}}
-									/>
-								);
-							})()}
+							{sigCanvasReady &&
+								sigCanvasComponentRef.current &&
+								(() => {
+									const SigCanvas = sigCanvasComponentRef.current!;
+									return (
+										<SigCanvas
+											ref={sigCanvasRef}
+											penColor="black"
+											canvasProps={{
+												width: 460,
+												height: 160,
+												className: "w-full rounded-lg",
+											}}
+										/>
+									);
+								})()}
 						</div>
 						<div className="mt-4 flex items-center justify-end gap-3">
 							<button
