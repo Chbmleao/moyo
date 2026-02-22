@@ -78,7 +78,7 @@ export function UserMenu({ email, role, avatarUrl, name }: UserMenuProps) {
 			</button>
 
 			{open && (
-				<div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-border bg-card p-2 shadow-xl animate-fade-slide-in">
+				<div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-border bg-card/90 backdrop-blur-md p-2 shadow-xl animate-fade-slide-in">
 					{/* User info */}
 					<div className="border-b border-border px-3 py-3">
 						{name && <p className="truncate text-sm font-semibold text-foreground">{name}</p>}
