@@ -49,7 +49,16 @@ const app = Fastify({
 });
 
 app.register(cors, {
-	origin: process.env.FRONTEND_URL ?? "http://localhost:3000",
+	origin: (origin, callback) => {
+		const allowedOrigins = ["https://moyofrontend-production.up.railway.app", "http://localhost:3000"];
+		if (allowedOrigins.includes(origin)) {
+			callback(null, true);
+		} else {
+			callback(new Error("Not allowed by CORS"));
+		}
+	},
+	methods: ["GET", "POST", "PUT", "DELETE"],
+	credentials: true,
 });
 
 app.register(multipart, {
