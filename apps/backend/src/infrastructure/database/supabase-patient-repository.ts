@@ -1,6 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Patient } from "../../domain/entities/patient.js";
-import type { PatientRepository, CreatePatientInput, UpdatePatientInput } from "../../domain/repositories/patient-repository.js";
+import type {
+	PatientRepository,
+	CreatePatientInput,
+	UpdatePatientInput,
+} from "../../domain/repositories/patient-repository.js";
 
 type PatientRow = {
 	id: string;
@@ -86,12 +90,7 @@ export function createSupabasePatientRepository(): PatientRepository {
 				return this.findById(id);
 			}
 
-			const { data, error } = await supabase
-				.from("patients")
-				.update(updates)
-				.eq("id", id)
-				.select()
-				.single();
+			const { data, error } = await supabase.from("patients").update(updates).eq("id", id).select().single();
 
 			if (error) {
 				if (error.code === "PGRST116") return null;
@@ -101,10 +100,7 @@ export function createSupabasePatientRepository(): PatientRepository {
 		},
 
 		async delete(id: string): Promise<boolean> {
-			const { error, count } = await supabase
-				.from("patients")
-				.delete({ count: "exact" })
-				.eq("id", id);
+			const { error, count } = await supabase.from("patients").delete({ count: "exact" }).eq("id", id);
 
 			if (error) throw error;
 			return (count ?? 0) > 0;

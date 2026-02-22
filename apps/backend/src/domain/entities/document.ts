@@ -3,6 +3,7 @@ export type DocumentStatus = "pending_signature" | "signed";
 export type Document = {
 	id: string;
 	professionalId: string;
+	patientId: string | null;
 	filePath: string;
 	fileName: string;
 	signerEmail: string | null;

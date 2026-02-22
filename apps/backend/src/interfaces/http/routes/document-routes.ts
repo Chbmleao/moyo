@@ -43,6 +43,7 @@ export function registerDocumentRoutes(
 		let fileName = "";
 		let signerEmail: string | null = null;
 		let deadlineRaw: string | null = null;
+		let patientId: string | null = null;
 
 		try {
 			const parts = request.parts();
@@ -68,6 +69,7 @@ export function registerDocumentRoutes(
 					const v = String(part.value ?? "").trim();
 					if (part.fieldname === "signer_email") signerEmail = v || null;
 					if (part.fieldname === "deadline") deadlineRaw = v || null;
+					if (part.fieldname === "patient_id") patientId = v || null;
 				}
 			}
 		} catch (err) {
@@ -94,11 +96,13 @@ export function registerDocumentRoutes(
 				fileName,
 				signerEmail,
 				deadlineAt,
+				patientId,
 			});
 			await reply.status(201).send({
 				id: document.id,
 				fileName: document.fileName,
 				signerEmail: document.signerEmail,
+				patientId: document.patientId,
 				deadlineAt: document.deadlineAt?.toISOString() ?? null,
 				status: document.status,
 				createdAt: document.createdAt.toISOString(),
@@ -121,6 +125,7 @@ export function registerDocumentRoutes(
 					id: doc.id,
 					fileName: doc.fileName,
 					signerEmail: doc.signerEmail,
+					patientId: doc.patientId,
 					deadlineAt: doc.deadlineAt?.toISOString() ?? null,
 					status: doc.status,
 					createdAt: doc.createdAt.toISOString(),
@@ -156,6 +161,7 @@ export function registerDocumentRoutes(
 					id: result.document.id,
 					fileName: result.document.fileName,
 					signerEmail: result.document.signerEmail,
+					patientId: result.document.patientId,
 					deadlineAt: result.document.deadlineAt?.toISOString() ?? null,
 					status: result.document.status,
 					createdAt: result.document.createdAt.toISOString(),

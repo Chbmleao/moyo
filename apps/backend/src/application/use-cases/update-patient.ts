@@ -26,7 +26,7 @@ export function makeUpdatePatient(patientRepository: PatientRepository): UpdateP
 			throw Object.assign(new Error("Name cannot be empty"), { statusCode: 400 });
 		}
 
-		const email = input.email !== undefined ? (input.email?.trim() || null) : undefined;
+		const email = input.email !== undefined ? input.email?.trim() || null : undefined;
 
 		// Re-check linked user if email changed
 		let linkedUserId: string | null | undefined = undefined;

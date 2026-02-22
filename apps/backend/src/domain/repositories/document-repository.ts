@@ -3,6 +3,7 @@ import type { Document } from "../entities/document.js";
 export type CreateDocumentInput = {
 	id: string;
 	professionalId: string;
+	patientId: string | null;
 	filePath: string;
 	fileName: string;
 	signerEmail: string | null;

@@ -5,6 +5,7 @@ import type { DocumentRepository, CreateDocumentInput } from "../../domain/repos
 type DocumentRow = {
 	id: string;
 	professional_id: string;
+	patient_id: string | null;
 	file_path: string;
 	file_name: string;
 	signer_email: string | null;
@@ -20,6 +21,7 @@ function rowToDocument(row: DocumentRow): Document {
 	return {
 		id: row.id,
 		professionalId: row.professional_id,
+		patientId: row.patient_id,
 		filePath: row.file_path,
 		fileName: row.file_name,
 		signerEmail: row.signer_email,
@@ -49,6 +51,7 @@ export function createSupabaseDocumentRepository(): DocumentRepository {
 				.insert({
 					id: input.id,
 					professional_id: input.professionalId,
+					patient_id: input.patientId,
 					file_path: input.filePath,
 					file_name: input.fileName,
 					signer_email: input.signerEmail,

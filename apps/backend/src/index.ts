@@ -31,7 +31,7 @@ const storageRepository = createSupabaseStorageRepository();
 const patientRepository = createSupabasePatientRepository();
 
 const getCurrentUser = makeGetCurrentUser(authRepository);
-const createDocument = makeCreateDocument(documentRepository, storageRepository);
+const createDocument = makeCreateDocument(documentRepository, storageRepository, patientRepository);
 const listDocuments = makeListDocuments(documentRepository);
 const getDocument = makeGetDocument(documentRepository, storageRepository);
 const createSigningLink = makeCreateSigningLink(documentRepository);
