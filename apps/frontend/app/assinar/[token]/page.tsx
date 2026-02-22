@@ -241,14 +241,17 @@ export default function AssinarPage() {
 
 				{/* PDF Viewer */}
 				{docData && (
-					<div className="rounded-xl border border-border bg-card p-4">
+					<div className="rounded-xl border border-border bg-card p-4 overflow-hidden">
 						<PDFDocument
 							file={docData.viewUrl}
 							onLoadSuccess={onDocumentLoadSuccess}
 							loading={<p className="py-8 text-center text-muted-foreground">Carregando PDF…</p>}
 							error={<p className="py-8 text-center text-destructive">Erro ao carregar PDF</p>}>
 							{Array.from({ length: numPages }, (_, i) => (
-								<div key={i} className="relative mb-4 cursor-crosshair last:mb-0" onClick={e => handlePageClick(i, e)}>
+								<div
+									key={i}
+									className="relative mb-4 cursor-crosshair last:mb-0 w-fit mx-auto"
+									onClick={e => handlePageClick(i, e)}>
 									<PDFPage
 										pageNumber={i + 1}
 										width={pageWidth > 0 ? pageWidth - 32 : undefined}
