@@ -8,6 +8,7 @@ const labelMap: Record<string, string> = {
 	app: "Início",
 	documentos: "Documentos",
 	assinaturas: "Assinaturas",
+	pacientes: "Pacientes",
 	perfil: "Perfil",
 };
 

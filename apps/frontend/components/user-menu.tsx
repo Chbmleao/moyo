@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronDown, LogOut, User, FileText, PenTool, LayoutDashboard } from "lucide-react";
+import { ChevronDown, LogOut, User, Users, FileText, PenTool, LayoutDashboard } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 interface UserMenuProps {
@@ -116,6 +116,15 @@ export function UserMenu({ email, role, avatarUrl, name }: UserMenuProps) {
 								className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition hover:bg-muted/60">
 								<PenTool className="h-4 w-4 text-muted-foreground" />
 								Assinaturas
+							</Link>
+						)}
+						{isProfessional && (
+							<Link
+								href="/app/pacientes"
+								onClick={() => setOpen(false)}
+								className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition hover:bg-muted/60">
+								<Users className="h-4 w-4 text-muted-foreground" />
+								Pacientes
 							</Link>
 						)}
 						<Link

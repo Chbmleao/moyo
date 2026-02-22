@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { FileText, Clock, CheckCircle, Upload, User } from 'lucide-react';
+import { FileText, Clock, CheckCircle, Upload, User, Users } from 'lucide-react';
 
 function getGreeting(): string {
   const hour = new Date().getHours();
@@ -64,7 +64,7 @@ export default async function AppHomePage() {
 
         {/* Quick actions */}
         <h2 className="mb-4 text-lg font-medium text-foreground">Ações rápidas</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-3">
           <Link
             href="/app/documentos"
             className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/40 hover:shadow-md"
@@ -73,8 +73,20 @@ export default async function AppHomePage() {
               <Upload className="h-5 w-5" />
             </div>
             <div>
-              <p className="font-medium text-foreground">Gerenciar documentos</p>
-              <p className="text-sm text-muted-foreground">Enviar, visualizar e gerar links de assinatura</p>
+              <p className="font-medium text-foreground">Documentos</p>
+              <p className="text-sm text-muted-foreground">Enviar e gerar links de assinatura</p>
+            </div>
+          </Link>
+          <Link
+            href="/app/pacientes"
+            className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition hover:border-primary/40 hover:shadow-md"
+          >
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+              <Users className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Pacientes</p>
+              <p className="text-sm text-muted-foreground">Cadastrar e gerenciar seus pacientes</p>
             </div>
           </Link>
           <Link
@@ -86,7 +98,7 @@ export default async function AppHomePage() {
             </div>
             <div>
               <p className="font-medium text-foreground">Meu perfil</p>
-              <p className="text-sm text-muted-foreground">Editar foto e verificar dados da conta</p>
+              <p className="text-sm text-muted-foreground">Editar foto e dados da conta</p>
             </div>
           </Link>
         </div>
