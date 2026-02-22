@@ -19,6 +19,8 @@ const PDFPage = dynamic(() => import("react-pdf").then(mod => mod.Page), { ssr: 
 
 // react-signature-canvas needs a ref, so we use lazy import via useEffect
 import type ReactSignatureCanvas from "react-signature-canvas";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-pdf/dist/esm/Page/TextLayer.css";
 
 type PlacedSignature = {
 	page: number;
@@ -74,8 +76,6 @@ export default function AssinarPage() {
 			sigCanvasComponentRef.current = mod.default as unknown as typeof sigCanvasComponentRef.current;
 			setSigCanvasReady(true);
 		});
-		import("react-pdf/dist/esm/Page/AnnotationLayer.css");
-		import("react-pdf/dist/esm/Page/TextLayer.css");
 	}, []);
 
 	// Load document data
