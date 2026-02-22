@@ -152,20 +152,16 @@ export default function PerfilPage() {
 								)}
 							</span>
 						</button>
-						<input
-							ref={fileRef}
-							type="file"
-							accept="image/*"
-							onChange={handleAvatarUpload}
-							className="hidden"
-						/>
+						<input ref={fileRef} type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
 						<p className="mt-2 text-xs text-muted-foreground">Clique para alterar a foto</p>
 					</div>
 
 					{/* Info */}
 					<div className="space-y-4">
 						<div>
-							<label htmlFor="name" className="mb-1 block text-sm font-medium text-muted-foreground">Nome</label>
+							<label htmlFor="name" className="mb-1 block text-sm font-medium text-muted-foreground">
+								Nome
+							</label>
 							<div className="flex gap-2">
 								<input
 									id="name"

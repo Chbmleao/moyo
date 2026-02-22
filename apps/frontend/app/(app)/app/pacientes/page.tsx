@@ -396,13 +396,7 @@ export default function PacientesPage() {
 									<Camera className="h-5 w-5 text-white" />
 								</span>
 							</button>
-							<input
-								ref={fileRef}
-								type="file"
-								accept="image/*"
-								onChange={handleAvatarPick}
-								className="hidden"
-							/>
+							<input ref={fileRef} type="file" accept="image/*" onChange={handleAvatarPick} className="hidden" />
 							<p className="mt-1.5 text-xs text-muted-foreground">Foto do paciente (opcional)</p>
 						</div>
 
@@ -471,9 +465,8 @@ export default function PacientesPage() {
 						onClick={e => e.stopPropagation()}>
 						<h2 className="mb-2 text-lg font-semibold text-foreground">Excluir paciente</h2>
 						<p className="mb-6 text-sm text-muted-foreground">
-							Tem certeza que deseja excluir{" "}
-							<span className="font-medium text-foreground">{deleteTarget.name}</span>? Esta ação não pode ser
-							desfeita.
+							Tem certeza que deseja excluir <span className="font-medium text-foreground">{deleteTarget.name}</span>?
+							Esta ação não pode ser desfeita.
 						</p>
 						<div className="flex items-center justify-end gap-3">
 							<button

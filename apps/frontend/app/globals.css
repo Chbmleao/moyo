@@ -3,129 +3,129 @@
 @tailwind utilities;
 
 :root {
-  --background: 40 20% 98%;
-  --foreground: 222 14% 16%;
-  --card: 0 0% 100%;
-  --card-foreground: 222 14% 16%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222 14% 16%;
-  --primary: 180 45% 40%;
-  --primary-foreground: 185 75% 95%;
-  --primary-light: 180 55% 85%;
-  --secondary: 210 40% 50%;
-  --secondary-foreground: 210 100% 97%;
-  --muted: 210 24% 90%;
-  --muted-foreground: 216 15% 35%;
-  --accent: 15 75% 55%;
-  --accent-foreground: 18 100% 97%;
-  --destructive: 5 74% 50%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 210 24% 90%;
-  --input: 210 24% 90%;
-  --ring: 180 45% 40%;
-  --radius: 0.75rem;
+	--background: 40 20% 98%;
+	--foreground: 222 14% 16%;
+	--card: 0 0% 100%;
+	--card-foreground: 222 14% 16%;
+	--popover: 0 0% 100%;
+	--popover-foreground: 222 14% 16%;
+	--primary: 180 45% 40%;
+	--primary-foreground: 185 75% 95%;
+	--primary-light: 180 55% 85%;
+	--secondary: 210 40% 50%;
+	--secondary-foreground: 210 100% 97%;
+	--muted: 210 24% 90%;
+	--muted-foreground: 216 15% 35%;
+	--accent: 15 75% 55%;
+	--accent-foreground: 18 100% 97%;
+	--destructive: 5 74% 50%;
+	--destructive-foreground: 0 0% 98%;
+	--border: 210 24% 90%;
+	--input: 210 24% 90%;
+	--ring: 180 45% 40%;
+	--radius: 0.75rem;
 
-  /* Landing hero: soft glow for gradient/orb */
-  --hero-glow: 180 40% 92%;
+	/* Landing hero: soft glow for gradient/orb */
+	--hero-glow: 180 40% 92%;
 }
 
 @keyframes blob-float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.6;
-  }
-  33% {
-    transform: translate(2%, -2%) scale(1.02);
-    opacity: 0.7;
-  }
-  66% {
-    transform: translate(-1%, 1%) scale(0.98);
-    opacity: 0.55;
-  }
+	0%,
+	100% {
+		transform: translate(0, 0) scale(1);
+		opacity: 0.6;
+	}
+	33% {
+		transform: translate(2%, -2%) scale(1.02);
+		opacity: 0.7;
+	}
+	66% {
+		transform: translate(-1%, 1%) scale(0.98);
+		opacity: 0.55;
+	}
 }
 
 @keyframes glow-breathe {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.65;
-  }
+	0%,
+	100% {
+		opacity: 0.4;
+	}
+	50% {
+		opacity: 0.65;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .motion-blob,
-  .motion-glow {
-    animation: none !important;
-  }
+	.motion-blob,
+	.motion-glow {
+		animation: none !important;
+	}
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: 222 47% 7%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 180 45% 45%;
-    --primary-foreground: 185 55% 96%;
-    --primary-light: 180 55% 75%;
-    --secondary: 210 40% 40%;
-    --secondary-foreground: 210 100% 95%;
-    --muted: 222 27% 18%;
-    --muted-foreground: 210 15% 70%;
-    --accent: 15 75% 60%;
-    --accent-foreground: 18 100% 97%;
-    --destructive: 5 84% 55%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 222 27% 18%;
-    --input: 222 27% 18%;
-    --ring: 180 45% 45%;
-    --hero-glow: 180 35% 18%;
-  }
+	:root {
+		--background: 222 47% 7%;
+		--foreground: 210 40% 98%;
+		--card: 222 47% 9%;
+		--card-foreground: 210 40% 98%;
+		--popover: 222 47% 9%;
+		--popover-foreground: 210 40% 98%;
+		--primary: 180 45% 45%;
+		--primary-foreground: 185 55% 96%;
+		--primary-light: 180 55% 75%;
+		--secondary: 210 40% 40%;
+		--secondary-foreground: 210 100% 95%;
+		--muted: 222 27% 18%;
+		--muted-foreground: 210 15% 70%;
+		--accent: 15 75% 60%;
+		--accent-foreground: 18 100% 97%;
+		--destructive: 5 84% 55%;
+		--destructive-foreground: 210 40% 98%;
+		--border: 222 27% 18%;
+		--input: 222 27% 18%;
+		--ring: 180 45% 45%;
+		--hero-glow: 180 35% 18%;
+	}
 }
 
 @keyframes fade-slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 @keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateX(100%);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
 }
 
 @layer utilities {
-  .animate-fade-slide-in {
-    animation: fade-slide-in 0.3s ease-out both;
-  }
+	.animate-fade-slide-in {
+		animation: fade-slide-in 0.3s ease-out both;
+	}
 
-  .animate-toast-in {
-    animation: toast-in 0.3s ease-out both;
-  }
+	.animate-toast-in {
+		animation: toast-in 0.3s ease-out both;
+	}
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+	* {
+		@apply border-border;
+	}
 
-  body {
-    @apply bg-background text-foreground antialiased;
-  }
+	body {
+		@apply bg-background text-foreground antialiased;
+	}
 }

@@ -43,9 +43,7 @@ export function Breadcrumbs() {
 					{i > 0 && <ChevronRight className="h-3.5 w-3.5" />}
 					{i === 0 && <Home className="mr-0.5 h-3.5 w-3.5" />}
 					{crumb.href ? (
-						<Link
-							href={crumb.href}
-							className="transition hover:text-foreground">
+						<Link href={crumb.href} className="transition hover:text-foreground">
 							{crumb.label}
 						</Link>
 					) : (

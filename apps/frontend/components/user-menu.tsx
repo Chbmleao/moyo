@@ -68,14 +68,10 @@ export function UserMenu({ email, role, avatarUrl, name }: UserMenuProps) {
 				aria-expanded={open}
 				aria-haspopup="true">
 				{avatarUrl ? (
-					<img
-						src={avatarUrl}
-						alt=""
-						className="h-8 w-8 rounded-full object-cover"
-					/>
+					<img src={avatarUrl} alt="" className="h-8 w-8 rounded-full object-cover" />
 				) : (
 					<span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-					{getInitials(name, email)}
+						{getInitials(name, email)}
 					</span>
 				)}
 				<ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />

@@ -12,6 +12,7 @@ export type DocumentItem = {
 	id: string;
 	fileName: string;
 	signerEmail: string | null;
+	patientId: string | null;
 	deadlineAt: string | null;
 	status: string;
 	createdAt: string;
@@ -51,11 +52,13 @@ export async function uploadDocument(
 	file: File,
 	signerEmail?: string | null,
 	deadline?: string | null,
+	patientId?: string | null,
 ): Promise<DocumentItem> {
 	const form = new FormData();
 	form.append("file", file);
 	if (signerEmail) form.append("signer_email", signerEmail);
 	if (deadline) form.append("deadline", deadline);
+	if (patientId) form.append("patient_id", patientId);
 
 	const url = `${getBaseUrl()}/documents`;
 	const res = await fetch(url, {
